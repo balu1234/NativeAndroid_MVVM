@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.mvvmapp.data.local.dao.EmployeeDao
 import com.example.mvvmapp.data.local.dao.StudentDao
+import com.example.mvvmapp.data.local.entity.Employee
 import com.example.mvvmapp.data.local.entity.Student
 
-@Database(entities = [Student::class], version = 1)
+@Database(entities = [Student::class, Employee::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun studentDao(): StudentDao
+    abstract fun employeeDao(): EmployeeDao
 
     companion object {
         @Volatile
@@ -22,7 +25,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "student_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
 
                 INSTANCE = instance
 

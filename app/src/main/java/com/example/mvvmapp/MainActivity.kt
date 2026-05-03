@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
             tab.text = when (position) {
                 0 -> "Students"
                 1 -> "Todos"
+                2 -> "Employees (Local)"
+                3 -> "Employees (API)"
                 else -> ""
             }
         }.attach()

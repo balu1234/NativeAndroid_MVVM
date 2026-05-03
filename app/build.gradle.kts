@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,6 +81,12 @@ dependencies {
 
     // Coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Compose ViewModel
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    
+    // Compose LiveData
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     implementation ("com.google.android.material:material:1.11.0")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
