@@ -17,6 +17,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mvvmapp.data.remote.model.EmployeeResponse
+import com.example.customdialog.ui.common.dialog.rememberDialogManager
+import com.example.customdialog.ui.common.dialog.CustomDialog
 import com.example.mvvmapp.ui.employee.viewmodel.EmployeeApiViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,9 +29,15 @@ fun EmployeeApiScreen() {
     val employees by viewModel.employees.observeAsState(emptyList())
     val isLoading by viewModel.isLoading.observeAsState(false)
     val error by viewModel.error.observeAsState()
+    val dialogManager = rememberDialogManager()
     
     LaunchedEffect(Unit) {
         viewModel.fetchEmployees()
+        kotlinx.coroutines.delay(500)
+        dialogManager.showWelcomeDialog(
+            screenName = "Employees (API)",
+            description = "View employee data fetched from a real API. This demonstrates network integration with real-time data synchronization and error handling."
+        )
     }
     
     Scaffold(
@@ -179,6 +187,20 @@ fun EmployeeApiScreen() {
             }
         }
     }
+    
+    // Custom Dialog Overlay
+    CustomDialog(
+        isVisible = dialogManager.dialogState.value.isVisible,
+        onDismiss = { dialogManager.hideDialog() },
+        title = dialogManager.dialogState.value.title,
+        message = dialogManager.dialogState.value.message,
+        positiveButtonText = dialogManager.dialogState.value.positiveButtonText,
+        negativeButtonText = dialogManager.dialogState.value.negativeButtonText,
+        onPositiveClick = dialogManager.dialogState.value.onPositiveClick,
+        onNegativeClick = dialogManager.dialogState.value.onNegativeClick,
+        showIcon = dialogManager.dialogState.value.showIcon,
+        iconText = dialogManager.dialogState.value.iconText
+    )
 }
 
 @Composable

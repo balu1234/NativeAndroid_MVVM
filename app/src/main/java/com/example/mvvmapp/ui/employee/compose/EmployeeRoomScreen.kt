@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.mvvmapp.data.local.entity.Employee
 import com.example.mvvmapp.data.local.db.AppDatabase
 import com.example.mvvmapp.data.repository.EmployeeRepository
+import com.example.customdialog.ui.common.dialog.rememberDialogManager
+import com.example.customdialog.ui.common.dialog.CustomDialog
 import com.example.mvvmapp.ui.employee.viewmodel.EmployeeViewModel
 import com.example.mvvmapp.ui.employee.viewmodel.EmployeeViewModel.EmployeeViewModelFactory
 
@@ -37,6 +39,16 @@ fun EmployeeRoomScreen(
     val employeeCount by viewModel.employeeCount.observeAsState(0)
     
     var showAddDialog by remember { mutableStateOf(false) }
+    val dialogManager = rememberDialogManager()
+    
+    // Show welcome dialog when screen is first created
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(500)
+        dialogManager.showWelcomeDialog(
+            screenName = "Employees (Local)",
+            description = "Manage your local employee database here. Add new employees, view their details, and delete records as needed. All data is stored locally on your device."
+        )
+    }
     
     Scaffold(
         topBar = {
@@ -120,6 +132,20 @@ fun EmployeeRoomScreen(
             }
         }
     }
+    
+    // Custom Dialog Overlay
+    CustomDialog(
+        isVisible = dialogManager.dialogState.value.isVisible,
+        onDismiss = { dialogManager.hideDialog() },
+        title = dialogManager.dialogState.value.title,
+        message = dialogManager.dialogState.value.message,
+        positiveButtonText = dialogManager.dialogState.value.positiveButtonText,
+        negativeButtonText = dialogManager.dialogState.value.negativeButtonText,
+        onPositiveClick = dialogManager.dialogState.value.onPositiveClick,
+        onNegativeClick = dialogManager.dialogState.value.onNegativeClick,
+        showIcon = dialogManager.dialogState.value.showIcon,
+        iconText = dialogManager.dialogState.value.iconText
+    )
 }
 
 @Composable

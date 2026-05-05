@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MVVMAPP"
 include(":app")
+include(":dialog")
