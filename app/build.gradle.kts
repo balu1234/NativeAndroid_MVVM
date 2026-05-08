@@ -22,12 +22,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.create("release") {
+                storeFile = file("mvvmapp-release.keystore")
+                storePassword = "mvvmapp123"
+                keyAlias = "mvvmapp"
+                keyPassword = "mvvmapp123"
+            }
         }
     }
     compileOptions {
