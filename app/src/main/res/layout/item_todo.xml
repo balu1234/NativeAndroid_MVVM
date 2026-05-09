@@ -24,7 +24,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@{todo.completed ? @android:drawable/ic_menu_save : @android:drawable/ic_menu_recent_history}"
-                android:tint="@{todo.completed ? @android:color/holo_green_dark : @android:color/holo_orange_dark}"
+                app:tint="@android:color/holo_green_dark"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
