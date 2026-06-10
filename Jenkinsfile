@@ -51,16 +51,44 @@ pipeline {
     }
 
     post {
+
         success {
-            echo 'Build completed successfully!'
+
+            archiveArtifacts(
+                artifacts: 'app/build/outputs/**/*.apk',
+                fingerprint: true
+            )
+
+            emailext(
+                subject: "Android Build Success - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+    Build Successful
+
+    Project: ${env.JOB_NAME}
+    Build Number: ${env.BUILD_NUMBER}
+
+    Check Jenkins:
+    ${env.BUILD_URL}
+    """,
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
+            )
         }
 
         failure {
-            echo 'Build failed!'
-        }
 
-        always {
-            cleanWs()
+            emailext(
+                subject: "Android Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+    Build Failed
+
+    Project: ${env.JOB_NAME}
+    Build Number: ${env.BUILD_NUMBER}
+
+    Check logs:
+    ${env.BUILD_URL}
+    """,
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
+            )
         }
     }
 }
