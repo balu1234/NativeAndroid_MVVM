@@ -57,6 +57,19 @@ pipeline {
                 )
             }
         }
+         stage('Upload to Firebase App Distribution') {
+            steps {
+                withCredentials([string(credentialsId: 'firebase-token', variable: 'FIREBASE_TOKEN')]) {
+                    sh '''
+                        firebase appdistribution:distribute \
+                        app/build/outputs/apk/release/*.apk \
+                        --app YOUR_FIREBASE_APP_ID \
+                        --groups "testers" \
+                        --release-notes "Automated Jenkins build"
+                    '''
+                }
+            }
+        }
 
     }
 
@@ -72,16 +85,12 @@ pipeline {
                 Project: ${env.JOB_NAME}
                 Build Number: ${env.BUILD_NUMBER}
 
-                APK + AAB generated successfully.
+                APK and AAB are generated and uploaded to Firebase App Distribution.
 
                 Check Jenkins:
                 ${env.BUILD_URL}
                 """,
-                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com, nandini.kolukuluri@gmail.com",
-                attachmentsPattern: '''
-                    app/build/outputs/apk/release/*.apk,
-                    app/build/outputs/bundle/release/*.aab
-                '''
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com, nandini.kolukuluri@gmail.com"
             )
         }
 
