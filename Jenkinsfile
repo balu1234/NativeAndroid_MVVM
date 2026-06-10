@@ -58,7 +58,7 @@ pipeline {
             }
         }
 
-       stage('Upload to Firebase App Distribution') {
+       stage('Upload APK to Firebase App Distribution') {
            steps {
                withCredentials([file(credentialsId: 'firebase-sa', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                    sh '''
@@ -66,10 +66,24 @@ pipeline {
 
                        /usr/local/bin/firebase appdistribution:distribute \
                        app/build/outputs/apk/release/*.apk \
+                       --app YOUR_FIREBASE_APP_ID \
+                       --groups "testers" \
+                       --release-notes "Automated Jenkins build - APK"
+                   '''
+               }
+           }
+       }
+       stage('Upload AAB to Firebase App Distribution') {
+           steps {
+               withCredentials([file(credentialsId: 'firebase-sa', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                   sh '''
+                       /usr/local/bin/firebase --version
+
+                       /usr/local/bin/firebase appdistribution:distribute \
                        app/build/outputs/bundle/release/*.aab \
                        --app YOUR_FIREBASE_APP_ID \
                        --groups "testers" \
-                       --release-notes "Automated Jenkins build (APK + AAB)"
+                       --release-notes "Automated Jenkins build - AAB"
                    '''
                }
            }
