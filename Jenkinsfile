@@ -67,10 +67,10 @@ pipeline {
     Project: ${env.JOB_NAME}
     Build Number: ${env.BUILD_NUMBER}
 
-    Check Jenkins:
-    ${env.BUILD_URL}
+    APK is attached with this email.
     """,
-                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com",
+                attachmentsPattern: "app/build/outputs/apk/debug/*.apk"
             )
         }
 
@@ -84,8 +84,7 @@ pipeline {
     Project: ${env.JOB_NAME}
     Build Number: ${env.BUILD_NUMBER}
 
-    Check logs:
-    ${env.BUILD_URL}
+    Check Jenkins logs: ${env.BUILD_URL}
     """,
                 to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
             )
