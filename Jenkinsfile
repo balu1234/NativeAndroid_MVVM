@@ -66,7 +66,7 @@ pipeline {
 
                        /usr/local/bin/firebase appdistribution:distribute \
                        app/build/outputs/apk/release/*.apk \
-                       --app YOUR_FIREBASE_APP_ID \
+                       --app 1:632684680102:android:f0e76f2734937d1024b567 \
                        --groups "testers" \
                        --release-notes "Automated Jenkins build - APK"
                    '''
@@ -81,7 +81,7 @@ pipeline {
 
                        /usr/local/bin/firebase appdistribution:distribute \
                        app/build/outputs/bundle/release/*.aab \
-                       --app YOUR_FIREBASE_APP_ID \
+                       --app 1:632684680102:android:f0e76f2734937d1024b567 \
                        --groups "testers" \
                        --release-notes "Automated Jenkins build - AAB"
                    '''
