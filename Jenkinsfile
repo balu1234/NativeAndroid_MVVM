@@ -34,59 +34,71 @@ pipeline {
             }
         }
 
-        stage('Build Debug APK') {
+        stage('Build Signed Release APK') {
             steps {
-                sh './gradlew assembleDebug'
+                sh './gradlew assembleRelease'
             }
         }
 
-        stage('Archive APK') {
+        stage('Build Signed AAB') {
+            steps {
+                sh './gradlew bundleRelease'
+            }
+        }
+
+        stage('Archive Artifacts') {
             steps {
                 archiveArtifacts(
-                    artifacts: 'app/build/outputs/**/*.apk',
+                    artifacts: '''
+                        app/build/outputs/apk/release/*.apk,
+                        app/build/outputs/bundle/release/*.aab
+                    ''',
                     fingerprint: true
                 )
             }
         }
+
     }
 
     post {
 
         success {
 
-            archiveArtifacts(
-                artifacts: 'app/build/outputs/**/*.apk',
-                fingerprint: true
-            )
-
             emailext(
-                subject: "Android Build Success - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "SIGNED BUILD SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
-    Build Successful
+                Signed Android Build Completed Successfully
 
-    Project: ${env.JOB_NAME}
-    Build Number: ${env.BUILD_NUMBER}
+                Project: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
 
-    APK is attached with this email.
-    """,
-                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com",
-                attachmentsPattern: "app/build/outputs/apk/debug/*.apk"
+                APK + AAB generated successfully.
+
+                Check Jenkins:
+                ${env.BUILD_URL}
+                """,
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com, nandini.kolukuluri@gmail.com",
+                attachmentsPattern: '''
+                    app/build/outputs/apk/release/*.apk,
+                    app/build/outputs/bundle/release/*.aab
+                '''
             )
         }
 
         failure {
 
             emailext(
-                subject: "Android Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "BUILD FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
-    Build Failed
+                Build Failed
 
-    Project: ${env.JOB_NAME}
-    Build Number: ${env.BUILD_NUMBER}
+                Project: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
 
-    Check Jenkins logs: ${env.BUILD_URL}
-    """,
-                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
+                Check logs:
+                ${env.BUILD_URL}
+                """,
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com, nandini.kolukuluri@gmail.com"
             )
         }
     }
