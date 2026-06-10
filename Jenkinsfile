@@ -1,36 +1,63 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'JDK17'
+    }
+
     stages {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/balu1234/NativeAndroid_MVVM.git'
             }
         }
 
-        stage('Clean') {
+        stage('Grant Permission') {
             steps {
-                sh './gradlew clean'
-            }
-        }
-
-        stage('Build APK') {
-            steps {
-                sh './gradlew assembleDebug'
+                sh 'chmod +x gradlew'
             }
         }
 
         stage('Unit Test') {
             steps {
-                sh './gradlew test'
+                sh './gradlew testDebugUnitTest'
             }
         }
 
-        stage('Archive APK') {
+        stage('Lint') {
             steps {
-                archiveArtifacts artifacts: 'app/build/outputs/apk/debug/*.apk'
+                sh './gradlew lintDebug'
             }
+        }
+
+        stage('Build Debug APK') {
+            steps {
+                sh './gradlew assembleDebug'
+            }
+        }
+
+        stage('Build Release APK') {
+            steps {
+                sh './gradlew assembleRelease'
+            }
+        }
+
+        stage('Build AAB') {
+            steps {
+                sh './gradlew bundleRelease'
+            }
+        }
+    }
+
+    post {
+        success {
+            archiveArtifacts artifacts: '''
+            app/build/outputs/apk/debug/*.apk,
+            app/build/outputs/apk/release/*.apk,
+            app/build/outputs/bundle/release/*.aab
+            '''
         }
     }
 }
