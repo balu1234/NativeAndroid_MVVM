@@ -57,27 +57,21 @@ pipeline {
                 )
             }
         }
-       stage('Upload APK to Firebase') {
-           steps {
-               sh '''
-                   /usr/local/bin/firebase appdistribution:distribute \
-                   app/build/outputs/apk/release/*.apk \
-                   --app 1:632684680102:android:f0e76f2734937d1024b567 \
-                   --groups "testers" \
-                   --release-notes "APK build"
-               '''
-           }
-       }
 
-       stage('Upload AAB to Firebase') {
+       stage('Upload to Firebase App Distribution') {
            steps {
-               sh '''
-                   /usr/local/bin/firebase appdistribution:distribute \
-                   app/build/outputs/bundle/release/*.aab \
-                   --app 1:632684680102:android:f0e76f2734937d1024b567 \
-                   --groups "testers" \
-                   --release-notes "AAB build"
-               '''
+               withCredentials([file(credentialsId: 'firebase-sa', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                   sh '''
+                       /usr/local/bin/firebase --version
+
+                       /usr/local/bin/firebase appdistribution:distribute \
+                       app/build/outputs/apk/release/*.apk \
+                       app/build/outputs/bundle/release/*.aab \
+                       --app YOUR_FIREBASE_APP_ID \
+                       --groups "testers" \
+                       --release-notes "Automated Jenkins build (APK + AAB)"
+                   '''
+               }
            }
        }
 
