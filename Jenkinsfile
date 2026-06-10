@@ -57,19 +57,21 @@ pipeline {
                 )
             }
         }
-         stage('Upload to Firebase App Distribution') {
-             steps {
-                 withCredentials([string(credentialsId: 'firebase-token', variable: 'FIREBASE_TOKEN')]) {
-                     sh '''
-                         /usr/local/bin/firebase appdistribution:distribute \
-                         app/build/outputs/apk/release/*.apk \
-                         --app 1:632684680102:android:f0e76f2734937d1024b567 \
-                         --groups "testers" \
-                         --release-notes "Automated Jenkins build"
-                     '''
-                 }
-             }
-         }
+        stage('Upload to Firebase App Distribution') {
+            steps {
+                withCredentials([string(credentialsId: 'firebase-token', variable: 'FIREBASE_TOKEN')]) {
+                    sh '''
+                        /usr/local/bin/firebase --version
+
+                        /usr/local/bin/firebase appdistribution:distribute \
+                        app/build/outputs/apk/release/*.apk \
+                        --app 1:632684680102:android:f0e76f2734937d1024b567 \
+                        --groups "testers" \
+                        --release-notes "Automated Jenkins build"
+                    '''
+                }
+            }
+        }
 
     }
 
@@ -90,7 +92,7 @@ pipeline {
                 Check Jenkins:
                 ${env.BUILD_URL}
                 """,
-                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com, nandini.kolukuluri@gmail.com"
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
             )
         }
 
@@ -107,7 +109,7 @@ pipeline {
                 Check logs:
                 ${env.BUILD_URL}
                 """,
-                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com, nandini.kolukuluri@gmail.com"
+                to: "rgukt.balu@gmail.com, balaji123.iiit@gmail.com"
             )
         }
     }
