@@ -58,18 +58,18 @@ pipeline {
             }
         }
          stage('Upload to Firebase App Distribution') {
-            steps {
-                withCredentials([string(credentialsId: 'firebase-token', variable: 'FIREBASE_TOKEN')]) {
-                    sh '''
-                        firebase appdistribution:distribute \
-                        app/build/outputs/apk/release/*.apk \
-                        --app YOUR_FIREBASE_APP_ID \
-                        --groups "testers" \
-                        --release-notes "Automated Jenkins build"
-                    '''
-                }
-            }
-        }
+             steps {
+                 withCredentials([string(credentialsId: 'firebase-token', variable: 'FIREBASE_TOKEN')]) {
+                     sh '''
+                         /usr/local/bin/firebase appdistribution:distribute \
+                         app/build/outputs/apk/release/*.apk \
+                         --app 1:632684680102:android:f0e76f2734937d1024b567 \
+                         --groups "testers" \
+                         --release-notes "Automated Jenkins build"
+                     '''
+                 }
+             }
+         }
 
     }
 
