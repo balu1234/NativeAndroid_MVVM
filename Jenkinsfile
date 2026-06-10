@@ -73,21 +73,21 @@ pipeline {
                }
            }
        }
-       stage('Upload AAB to Firebase App Distribution') {
-           steps {
-               withCredentials([file(credentialsId: 'firebase-sa', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                   sh '''
-                       /usr/local/bin/firebase --version
-
-                       /usr/local/bin/firebase appdistribution:distribute \
-                       app/build/outputs/bundle/release/*.aab \
-                       --app 1:632684680102:android:f0e76f2734937d1024b567 \
-                       --groups "testers" \
-                       --release-notes "Automated Jenkins build - AAB"
-                   '''
-               }
-           }
-       }
+//        stage('Upload AAB to Firebase App Distribution') {
+//            steps {
+//                withCredentials([file(credentialsId: 'firebase-sa', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+//                    sh '''
+//                        /usr/local/bin/firebase --version
+//
+//                        /usr/local/bin/firebase appdistribution:distribute \
+//                        app/build/outputs/bundle/release/*.aab \
+//                        --app 1:632684680102:android:f0e76f2734937d1024b567 \
+//                        --groups "testers" \
+//                        --release-notes "Automated Jenkins build - AAB"
+//                    '''
+//                }
+//            }
+//        }
 
     }
 
